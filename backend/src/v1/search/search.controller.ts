@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { SearchService } from './search.service'
+import { SearchParams } from './dto/search-params'
 
 @Controller({ version: '1' })
 export class SearchController {
@@ -12,12 +13,12 @@ export class SearchController {
     return results
   }
 
-  @Get('/search/:service')
-  async show(@Param() params: Record<string, string>): Promise<string> {
+  @Get('/search/:service/:page')
+  async show(@Param() params: SearchParams): Promise<string> {
     if (params.service == 'bing') {
-      return this.searchService.searchBing('01')
+      return this.searchService.searchBing(params.page)
     }
 
-    return this.searchService.search('01')
+    return this.searchService.search(params.page)
   }
 }
