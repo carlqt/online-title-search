@@ -1,6 +1,6 @@
 import { useState } from "react"
 import "./App.css"
-import { search } from "./parser"
+import { search } from "./api/search/search"
 
 function App() {
   const [page, setPage] = useState("")
