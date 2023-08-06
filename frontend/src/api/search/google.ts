@@ -1,4 +1,4 @@
-import { Result } from "./search"
+import { NetworkRequestError, Result } from "./search"
 
 const BASE_URL = 'http://localhost:3000'
 
@@ -38,7 +38,7 @@ const googleSearchRequest = async (url: string) => {
     }
   }
 
-  throw new Error('Request failed')
+  throw new NetworkRequestError('Request failed')
 }
 
 const transformToNodeList = (googleDocument: Document) => {

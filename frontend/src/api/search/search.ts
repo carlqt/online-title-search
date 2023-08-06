@@ -6,19 +6,34 @@ export interface Result {
   host: string;
 }
 
+export class NetworkRequestError extends Error {
+  constructor(message: string | undefined) {
+    super(message)
+    this.name = 'NetworkRequestError'
+  }
+}
+
 export const search = async (service: string) => {
   let result: Result[]
 
-  if (service === 'google') {
-    result = await googleSearch()
-  } else {
-    result = await bingSearch()
-  }
+  try {
+    if (service === 'google') {
+      result = await googleSearch()
+    } else {
+      result = await bingSearch()
+    }
 
-  return result
-    .filter(filterInfoTrack)
-    .map(transformToRankList)
-    .join(',') || '0'
+    return result
+      .filter(filterInfoTrack)
+      .map(transformToRankList)
+      .join(',') || '0'
+  } catch (e) {
+    if (e instanceof NetworkRequestError) {
+      return e.message
+    }
+
+    throw e
+  }
 }
 
 const filterInfoTrack = (data: Result) => {
