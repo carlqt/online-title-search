@@ -3,7 +3,7 @@ import { Result } from "./search"
 const BASE_URL = 'http://localhost:3000'
 
 // No of requests we want to make to reach 50 search items
-const NO_OF_REQUESTS = 5
+const NO_OF_REQUESTS = 6
 
 export const bingSearch = async (): Promise<Result[]> => {
   let documentCollection: Document[] = []
@@ -11,7 +11,7 @@ export const bingSearch = async (): Promise<Result[]> => {
   // Make requests until documentCollection is 50
   const parser = new DOMParser()
 
-  for(let i = 0; i <= NO_OF_REQUESTS; i++) {
+  for(let i = 0; i < NO_OF_REQUESTS; i++) {
     const result = await bingSearchRequest(requestUrl(i+1))
     const document = parser.parseFromString(result, 'text/html')
 
@@ -21,7 +21,6 @@ export const bingSearch = async (): Promise<Result[]> => {
   return documentCollection
     .map(transformToNodeList)
     .flatMap(transformToResult)
-    .filter(filterInfoTrack)
 }
 
 const requestUrl = (id: number) => {
@@ -40,10 +39,6 @@ const bingSearchRequest = async (url: string) => {
   }
 
   throw new Error('Request failed')
-}
-
-const filterInfoTrack = (data: Result) => {
-  return data.host.toLowerCase().includes('infotrack')
 }
 
 const transformToNodeList = (document: Document) => {

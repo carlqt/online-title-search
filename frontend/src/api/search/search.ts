@@ -15,13 +15,16 @@ export const search = async (service: string) => {
     result = await bingSearch()
   }
 
-  return condenseResults(result)
+  return result
+    .filter(filterInfoTrack)
+    .map(transformToRankList)
+    .join(',') || '0'
 }
 
-const condenseResults = (data: Result[]): string => {
-  if (data.length == 0) {
-    return '0'
-  }
+const filterInfoTrack = (data: Result) => {
+  return data.host.toLowerCase().includes('infotrack')
+}
 
-  return data.map((d) => d.rank).join(',')
+const transformToRankList = (data: Result) => {
+  return data.rank
 }
