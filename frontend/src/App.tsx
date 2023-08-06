@@ -1,10 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react"
+import reactLogo from "./assets/react.svg"
+import viteLogo from "/vite.svg"
+import "./App.css"
 
 function App() {
   const [count, setCount] = useState(0)
+  const [page, setPage] = useState("")
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const pageRequest = async () => {
+      const result = await fetch("http://localhost:3000/v1/search")
+      const resultText = await result.text()
+
+      setPage(resultText)
+    }
+
+    if (!page) {
+      pageRequest()
+    }
+  })
 
   return (
     <>
@@ -21,9 +36,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <p>{page}</p>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
