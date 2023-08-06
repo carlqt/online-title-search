@@ -1,3 +1,4 @@
+import { bingSearch } from "./bing"
 import { googleSearch } from "./google"
 
 export interface Result {
@@ -6,13 +7,15 @@ export interface Result {
 }
 
 export const search = async (service: string) => {
-  if (service === 'google') {
-    const result = await googleSearch()
+  let result: Result[]
 
-    return condenseResults(result)
+  if (service === 'google') {
+    result = await googleSearch()
+  } else {
+    result = await bingSearch()
   }
 
-  return 'No Data'
+  return condenseResults(result)
 }
 
 const condenseResults = (data: Result[]): string => {
