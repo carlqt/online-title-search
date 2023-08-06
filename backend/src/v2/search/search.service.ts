@@ -9,6 +9,8 @@ export class SearchService {
   // Find all Infotrack hosts - 1st 50pages
   // Transform it to a string of ranks
   // 1,2,5,49
+
+  // SearchService.search -> GoogleResults
   async search() {
     let data: GoogleResult[] = []
     const google = new Google()
@@ -17,7 +19,7 @@ export class SearchService {
 
     for (let i = 0; i <= 4; i++) {
       data = data.concat(searchResults.data())
-      searchResults.next()
+      await searchResults.next()
     }
 
     data = this.filterInfoTrack(data)
