@@ -15,4 +15,14 @@ export class SearchService {
 
     return resp.data
   }
+
+  async searchBing(pageNum: string) {
+    const url = `https://infotrack-tests.infotrack.com.au/Bing/Page${pageNum}.html`
+
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false })
+    const axiosInstance = axios.create({ httpsAgent })
+    const resp = await axiosInstance.get<string>(url)
+
+    return resp.data
+  }
 }

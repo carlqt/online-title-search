@@ -13,7 +13,11 @@ export class SearchController {
   }
 
   @Get('/search/:service')
-  show(@Param() params: Record<string, string>): string {
-    return `Search ${params.service}`
+  async show(@Param() params: Record<string, string>): Promise<string> {
+    if (params.service == 'bing') {
+      return this.searchService.searchBing('01')
+    }
+
+    return this.searchService.search('01')
   }
 }
