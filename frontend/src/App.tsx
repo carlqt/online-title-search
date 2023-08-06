@@ -1,18 +1,22 @@
 import { useState } from "react"
 import "./App.css"
+import { search } from "./parser"
 
 function App() {
-  const [service, setService] = useState("")
+  const [page, setPage] = useState("")
+  const [service, setService] = useState("google")
   const [searchString, setSearchString] = useState("")
 
   const options = [
-    { value: "", text: "Choose search" },
     { value: "google", text: "Google" },
     { value: "bing", text: "Bing" },
   ]
 
-  const formSubmit = (event: React.SyntheticEvent) => {
+  const formSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
+    const result = await search(service)
+
+    setPage(result)
   }
 
   const handleSearchInput = (event: React.FormEvent<HTMLInputElement>) => {
@@ -22,20 +26,6 @@ function App() {
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setService(event.currentTarget.value)
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(() => {
-  //   const pageRequest = async () => {
-  //     const result = await fetch("http://localhost:3000/v1/search")
-  //     const resultText = await result.text()
-
-  //     setPage(resultText)
-  //   }
-
-  //   if (!page) {
-  //     pageRequest()
-  //   }
-  // })
 
   return (
     <>
@@ -71,7 +61,7 @@ function App() {
         </div>
 
         <div>
-          <h1>Results</h1>
+          <h1>{page}</h1>
         </div>
       </div>
     </>
