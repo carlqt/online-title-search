@@ -1,11 +1,11 @@
-import { NetworkRequestError, Result } from "./search"
+import { NetworkRequestError } from "./search"
 
 const BASE_URL = 'http://localhost:3000'
 
 // No of requests we want to make to reach 50 search items
 const NO_OF_REQUESTS = 6
 
-export const bingSearch = async (): Promise<Result[]> => {
+export const bingSearch = async () => {
   let documentCollection: Document[] = []
 
   // Make requests until documentCollection is 50
@@ -20,7 +20,6 @@ export const bingSearch = async (): Promise<Result[]> => {
 
   return documentCollection
     .map(transformToNodeList)
-    .flatMap(transformToResult)
 }
 
 const requestUrl = (id: number) => {
@@ -43,18 +42,4 @@ const bingSearchRequest = async (url: string) => {
 
 const transformToNodeList = (document: Document) => {
   return document.querySelectorAll('#b_results li.b_algo h2 > a')
-}
-
-const transformToResult = (nodeList: NodeListOf<Element>, index: number) => {
-  let result: Result[] = []
-  const offset = index <= 1 ? (index * 7) : (index * 10 - 3)
-
-  nodeList.forEach((node, i) => {
-    const rank = offset + i + 1
-    const url = new URL(node.getAttribute('href') || '')
-    const host = url.host
-    result = result.concat({ rank, host })
-  })
-
-  return result
 }

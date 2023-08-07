@@ -1,11 +1,13 @@
-import { NetworkRequestError, Result } from "./search"
+import { NetworkRequestError } from "./search"
+
+// [[carl],[will, json],[tablante]] => [{id: 1, name: carl}, {id: 2, name: will}, {id:3, name:json}, tablante]
 
 const BASE_URL = 'http://localhost:3000'
 
 // No of requests we want to make to reach 50 search items
 const NO_OF_REQUESTS = 5
 
-export const googleSearch = async (): Promise<Result[]> => {
+export const googleSearch = async () => {
   let documentCollection: Document[] = []
 
   // Make requests until documentCollection is 50
@@ -20,7 +22,6 @@ export const googleSearch = async (): Promise<Result[]> => {
 
   return documentCollection
     .map(transformToNodeList)
-    .flatMap(transformToResult)
 }
 
 const requestUrl = (id: number) => {
@@ -43,18 +44,4 @@ const googleSearchRequest = async (url: string) => {
 
 const transformToNodeList = (googleDocument: Document) => {
   return googleDocument.querySelectorAll('#search .g .r>a')
-}
-
-const transformToResult = (nodeList: NodeListOf<Element>, index: number) => {
-  let result: Result[] = []
-  const offset = index * 10
-
-  nodeList.forEach((node, i) => {
-    const rank = offset + i + 1
-    const url = new URL(node.getAttribute('href') || '')
-    const host = url.host
-    result = result.concat({ rank, host })
-  })
-
-  return result
 }

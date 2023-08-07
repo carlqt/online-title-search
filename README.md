@@ -30,6 +30,8 @@ The backend exposes `http://localhost:3000/v1/search/:service/:page` where `serv
 
 The response of the backend is the raw HTML of the provided static pages.
 
+The command `pnpm test` runs a simple test powered by `vitest`
+
 # ideal-solution
 The `ideal-solution` branch contains my solution to how I think it should be correctly implemented.
 

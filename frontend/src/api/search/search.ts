@@ -14,16 +14,17 @@ export class NetworkRequestError extends Error {
 }
 
 export const search = async (service: string) => {
-  let result: Result[]
+  let nodeList: NodeListOf<Element>[]
 
   try {
     if (service === 'google') {
-      result = await googleSearch()
+      nodeList = await googleSearch()
     } else {
-      result = await bingSearch()
+      nodeList = await bingSearch()
     }
 
-    return result
+    return nodeList
+      .reduce(transformToResult, [])
       .filter(filterInfoTrack)
       .map(transformToRankList)
       .join(',') || '0'
@@ -43,3 +44,15 @@ const filterInfoTrack = (data: Result) => {
 const transformToRankList = (data: Result) => {
   return data.rank
 }
+
+const transformToResult = (memo: Result[], nodeList: NodeListOf<Element>) => {
+  nodeList.forEach((node) => {
+    const url = new URL(node.getAttribute('href') || '')
+    const rank = memo.length + 1
+
+    memo = memo.concat({ rank, host: url.host })
+  })
+
+  return memo
+}
+
