@@ -24,6 +24,8 @@ The `main` branch contains my solution to how I interpreted the problem. The imp
 
 The implemented solution tries to follow the requirements as close as possible. The parsing is handled by the native api `DOMParser` and `fetch` was used to handle http requests.
 
+The solution is also implemented following a functional paradigm as this is the pradigm that React follows.
+
 The backend exposes `http://localhost:3000/v1/search/:service/:page` where `service` parameter tells which search engine to use, `google` or `bing`. And `page` parameter tells which page to use.
 
 The response of the backend is the raw HTML of the provided static pages.
@@ -33,12 +35,13 @@ The `ideal-solution` branch contains my solution to how I think it should be cor
 
 The parsing is offloaded to the backend, using nestjs, and the frontend's responsibility is purely for displaying.
 
+The paradigm in the backend follows OOP since nestjs provides a lot of tools and resources for this approach.
+
 In addition, I've added a few packages to help with the solution:
 
 **Frontend stack**
 - axios - Http request library. Preferred this over `fetch` because it's a "batteries included". Pairs great with react-query
 - react-query - data fetching state management
-- vitest - Test framework. Preferred over jest since the project is created using `vite`
 - pnpm - Package manager
 - Reactjs
 
