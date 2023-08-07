@@ -29,27 +29,17 @@ export class GoogleResults {
   }
 
   data(): GoogleResult[] {
-    const results: GoogleResult[] = []
+    const resultElements = this.#document('#search .g .r>a').get()
 
-    this.#document('#search .g .r>a').each((i, el) => {
-      results.splice(
-        results.length,
-        0,
-        this.mapToResult(this.#document(el).attr('href'), i + 1),
-      )
-    })
-
-    return results
+    return resultElements.map(this.transformToResult)
   }
 
-  mapToResult(urlString: string, rank: number): GoogleResult {
-    const url = new URL(urlString)
-    const newRank = (this.currentPage - 1) * this.perPage + rank
+  transformToResult = (el: cheerio.Element, index: number): GoogleResult => {
+    const url = new URL(el.attribs['href'] || '')
+    const offset = (this.currentPage - 1) * 10
+    const rank = offset + index + 1
 
-    return {
-      rank: newRank,
-      host: url.host,
-    }
+    return { rank, host: url.host }
   }
 
   async next() {
