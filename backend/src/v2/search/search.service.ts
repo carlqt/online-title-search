@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common'
 import { Google } from './google'
-import { GoogleResult } from './google-results'
 import { Bing } from './bing'
+import { Result } from './base'
+
+interface ISearchResults {
+  next(): Promise<void>
+  data(): Result[]
+}
 
 @Injectable()
 export class SearchService {
   // constructor(private readonly httpService: HttpService) {}
 
-  // Find all Infotrack hosts - 1st 50pages
-  // Transform it to a string of ranks
-  // 1,2,5,49
-
-  // SearchService.search -> GoogleResults
-  async search(service: string) {
-    let searchResults
-    let data = []
+  async search(service: string): Promise<string> {
+    let searchResults: ISearchResults
+    let data: Result[] = []
 
     if (service === 'bing') {
       searchResults = await new Bing().search()
@@ -27,20 +27,19 @@ export class SearchService {
       await searchResults.next()
     }
 
-    data = this.filterInfoTrack(data)
-
-    return this.condenseResults(data)
+    return (
+      data
+        .filter(this.filterInfoTrack)
+        .map(this.transformToRankList)
+        .join(',') || '0'
+    )
   }
 
-  filterInfoTrack(data: GoogleResult[]) {
-    return data.filter((d) => d.host.toLowerCase().includes('infotrack'))
+  filterInfoTrack(data: Result) {
+    return data.host.toLowerCase().includes('infotrack')
   }
 
-  condenseResults(data: GoogleResult[]): string {
-    if (data.length == 0) {
-      return '0'
-    }
-
-    return data.map((d) => d.rank).join(',')
+  transformToRankList(data: Result) {
+    return data.rank
   }
 }
