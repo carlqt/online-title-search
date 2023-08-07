@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Google } from './google'
 import { GoogleResult } from './google-results'
+import { Bing } from './bing'
 
 @Injectable()
 export class SearchService {
@@ -11,11 +12,15 @@ export class SearchService {
   // 1,2,5,49
 
   // SearchService.search -> GoogleResults
-  async search() {
-    let data: GoogleResult[] = []
-    const google = new Google()
+  async search(service: string) {
+    let searchResults
+    let data = []
 
-    const searchResults = await google.search()
+    if (service === 'bing') {
+      searchResults = await new Bing().search()
+    } else {
+      searchResults = await new Google().search()
+    }
 
     for (let i = 0; i <= 4; i++) {
       data = data.concat(searchResults.data())

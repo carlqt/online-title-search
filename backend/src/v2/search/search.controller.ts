@@ -7,13 +7,13 @@ export class SearchController {
 
   @Get('/search')
   async index(): Promise<string> {
-    const results = await this.searchService.search()
+    const results = await this.searchService.search('google')
 
     return results
   }
 
   @Get('/search/:service')
-  show(@Param() params: Record<string, string>): string {
-    return `Search ${params.service}`
+  show(@Param() params: Record<string, string>) {
+    return this.searchService.search(params.service)
   }
 }
