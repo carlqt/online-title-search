@@ -1,11 +1,11 @@
 import { useState } from "react"
 import "./App.css"
-import { useSearch } from "./useSearch"
+import { search } from "./api/search/search"
 
 function App() {
+  const [page, setPage] = useState("")
   const [service, setService] = useState("google")
   const [searchString, setSearchString] = useState("")
-  const { data, isFetching, isError, error, refetch } = useSearch(service)
 
   const options = [
     { value: "google", text: "Google" },
@@ -14,7 +14,9 @@ function App() {
 
   const formSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
-    refetch()
+    const result = await search(service)
+
+    setPage(result)
   }
 
   const handleSearchInput = (event: React.FormEvent<HTMLInputElement>) => {
@@ -23,18 +25,6 @@ function App() {
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setService(event.currentTarget.value)
-  }
-
-  const resultDisplay = () => {
-    if (isFetching) {
-      return "LOADING"
-    }
-
-    if (isError) {
-      return error.message
-    }
-
-    return <span>{data}</span>
   }
 
   return (
@@ -71,7 +61,7 @@ function App() {
         </div>
 
         <div>
-          <h1>{resultDisplay()}</h1>
+          <h1>{page}</h1>
         </div>
       </div>
     </>
