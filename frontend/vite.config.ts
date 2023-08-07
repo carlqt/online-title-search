@@ -9,5 +9,9 @@ export default defineConfig({
     globals: true,
     environment: "jsdom"
   },
+  server: {
+    port: 5173,
+    strictPort: true,
+  },
   plugins: [react()],
 })
