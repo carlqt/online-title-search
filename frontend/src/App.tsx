@@ -34,7 +34,7 @@ function App() {
       return error.message
     }
 
-    return data
+    return <span>{data}</span>
   }
 
   return (
